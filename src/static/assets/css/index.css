@@ -1,0 +1,14 @@
+th[scope="col"] {
+  background-color: #696969;
+  color: #fff;
+}
+
+td,
+th {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 10px;
+}
+.column {
+  float: left;
+  width: 50%;
+}
