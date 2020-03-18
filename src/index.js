@@ -23,7 +23,7 @@ database.init.then(db => {
   const REST_API_ROOT = "/api";
   app.use(REST_API_ROOT, require("./app/routes/router"));
 
-  //accÃ¨s aux pages statiques
+  //accès aux pages statiques
   app.use(express.static(__dirname + "/static"));
 });
 

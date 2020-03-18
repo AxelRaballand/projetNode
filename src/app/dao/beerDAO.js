@@ -1,43 +1,53 @@
-const Beer = require('../model/beer');
+const Beer = require("../model/beer");
 
-const daoCommon = require('./commons/daoCommon');
+const daoCommon = require("./commons/daoCommon");
 
 class BeerDAO {
+  constructor() {
+    this.common = new daoCommon();
+  }
 
-    constructor() {
-        this.common = new daoCommon();
-    }
+  findAll() {
+    const sqlRequest = "SELECT * FROM beer";
 
-    findAll() {
-        const sqlRequest = "SELECT * FROM beer";
+    return this.common
+      .findAll(sqlRequest)
+      .then(rows => {
+        const beers = rows.map(row => new Beer(row));
+        return beers;
+      })
+      .catch(err => console.log(err));
+  }
 
-        return this.common.findAll(sqlRequest)
-            .then(rows => {
-                const beers = rows.map(row => new Beer(row));
-                return beers;
-            })
-            .catch(err=> console.log(err));
-    };
+  findById(id) {
+    let sqlRequest = "SELECT * FROM beer WHERE id=$id";
+    let sqlParams = { $id: id };
+    //console.log(sqlParams);
+    return this.common
+      .findOne(sqlRequest, sqlParams)
+      .then(row => new Beer(row));
+  }
 
-    findById(id) {
-        let sqlRequest = "SELECT * FROM beer WHERE id=$id";
-        let sqlParams = {$id: id};
-        //console.log(sqlParams);
-        return this.common.findOne(sqlRequest, sqlParams)
-            .then(row => new Beer(row))
+  findByAlcoholOverDeg(deg) {
+    const sqlRequest = "SELECT * FROM beer where alcohol_by_volume >= $deg ";
+    let sqlParams = { $deg: deg };
+    return this.common
+      .findAllWithParams(sqlRequest, sqlParams)
+      .then(rows => {
+        const beers = rows.map(row => new Beer(row));
+        return beers;
+      })
+      .catch(err => console.log(err));
+  }
 
-    };
-
-    findByAlcoholOverDeg(deg){
-        const sqlRequest = "SELECT * FROM beer where alcohol_by_volume >= $deg ";
-        let sqlParams = {$deg: deg};
-        return this.common.findAllWithParams(sqlRequest,sqlParams)
-            .then(rows => {
-                const beers = rows.map(row => new Beer(row));
-                return beers;
-            })
-            .catch(err=> console.log(err));
-    }
+  findByName(name) {
+    let sqlRequest = "SELECT * FROM beer WHERE name=$name";
+    let sqlParams = { $name: name };
+    //console.log(sqlParams);
+    return this.common
+      .findOne(sqlRequest, sqlParams)
+      .then(row => new Beer(row));
+  }
 }
 
 module.exports = BeerDAO;
