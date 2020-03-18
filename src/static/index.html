@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="icon" href="assets/icons/favicon.png" type="image/png">
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bièrédex</title>
+</head>
+<body>
+    <center><h1>Bièrédex</h1></center>
+    <div class="row">
+        <div class="column">
+            <p>
+                <input type="text" placeholder="Trouver une bière" name="searchbar" id="searchbar">
+                <input type="button" value="Chercher" id="butSearch">
+            </p>
+            <p>
+                <table>
+                    <tr>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Degré d'alcool</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                    <tr>
+                        <td>qsdfs</td>
+                        <td>sdfsd</td>
+                        <td>sdfsd</td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+        <div class="column">
+            <p>
+                <input type="text" placeholder="Ecrire un message" name="searchbar" id="searchbar">
+                <input type="button" value="Envoyer" id="butSend">
+            </p>
+        </div>
+      </div>
+
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="assets/js/index.js"></script>
+</html>
