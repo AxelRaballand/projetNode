@@ -27,15 +27,18 @@ database.init.then(db => {
   app.use(express.static(__dirname + "/static"));
 });
 
-let content = "";
-function onConnection(socket) {
-  console.log("connected");
-  socket.emit("init-data", content);
-  socket.on("on-editor-input", data => {
-    console.log("on-editor-input" + data);
-    content = data;
-    socket.broadcast.emit("broadcast-data", data);
+io.on("connection", socket => {
+  socket.username = "anonymous";
+  socket.on("message", msg =>
+    io.emit("message", { user: socket.username, message: msg })
+  );
+  socket.on("join", username => {
+    if (username != null) {
+      socket.username = username;
+    }
+    socket.broadcast.emit("message", {
+      user: "Server",
+      message: socket.username + " viens de se connecter sur le serveur !"
+    });
   });
-}
-
-io.on("connection", onConnection);
+});

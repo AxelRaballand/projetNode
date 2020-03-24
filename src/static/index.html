@@ -20,25 +20,72 @@
                     <tr>
                         <th scope="col">Nom</th>
                         <th scope="col">Degré d'alcool</th>
-                        <th scope="col">Description</th>
-                    </tr>
-                    <tr>
-                        <td>qsdfs</td>
-                        <td>sdfsd</td>
-                        <td>sdfsd</td>
+                        <th scope="col">Brasserie</th>
                     </tr>
                 </table>
             </p>
         </div>
-        <div class="column">
-            <p>
-                <input type="text" placeholder="Ecrire un message" name="chatbar" id="chatbar">
-                <input type="button" value="Envoyer" id="butSend">
-            </p>
+        <div id="app" class="column">
+            <div v-if="state == 0">
+                <h3>Connection</h3>
+                <form @submit.prevent="setUsername">
+                    <input type="text" placeholder="Username" v-model:value="username" />
+                    <input type="submit" value="Connection" />
+                </form>
+            </div>
+            <div v-if="state == 1">
+                <ul id="chatbox">
+                    <li v-for="message in messages">
+                        {{ message.user }} : {{ message.message }}
+                    </li>
+                </ul>
+                <form @submit.prevent="sendMessage">
+                    <input type="text" v-model:value="message" />
+                    <input type="submit" value="Send" />
+                </form>
+            </div>
         </div>
       </div>
-
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script type="module" src="assets/js/home.js"></script>
+<script type="module" src="../index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var socket = null;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '',
+            messages: [],
+            username: '',
+            state : 0
+        },
+        methods: {
+            sendMessage: function(){
+                if (this.message != '') {
+                    socket.emit('message',this.message);
+                    this.message= '';
+                }
+            },
+            setUsername: function(){
+                socket.emit('join',this.username);
+                this.username = '';
+                this.state = 1;
+            }
+        },
+        created: function(){
+            socket = io();
+        },
+        mounted: function(){
+            socket.on('message', function(message){
+                app.messages.push(message);
+                app.$nextTick(function () {
+                    var messageBox = document.getElementById('chatbox');
+                    messageBox.scrollTop = message.scrollHeight;
+                })
+            })
+        }
+    });
+</script>
 </html>
