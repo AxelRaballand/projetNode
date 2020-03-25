@@ -9,6 +9,7 @@
 </head>
 <body>
     <center><h1>Bièrédex</h1></center>
+    <h2>Constituez un Bièrédex et discutez-en avec vos amis sur le chat</h2>
     <div class="row">
         <div class="column">
             <p>
@@ -21,6 +22,7 @@
                         <th scope="col">Nom</th>
                         <th scope="col">Degré d'alcool</th>
                         <th scope="col">Brasserie</th>
+                        <th scope="col">Supprimer</th>
                     </tr>
                 </table>
             </p>
@@ -49,43 +51,8 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script type="module" src="assets/js/home.js"></script>
-<script type="module" src="../index.js"></script>
+
+
+<!-- BJF <script type="module" src="../index.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script>
-    var socket = null;
-    var app = new Vue({
-        el: '#app',
-        data: {
-            message: '',
-            messages: [],
-            username: '',
-            state : 0
-        },
-        methods: {
-            sendMessage: function(){
-                if (this.message != '') {
-                    socket.emit('message',this.message);
-                    this.message= '';
-                }
-            },
-            setUsername: function(){
-                socket.emit('join',this.username);
-                this.username = '';
-                this.state = 1;
-            }
-        },
-        created: function(){
-            socket = io();
-        },
-        mounted: function(){
-            socket.on('message', function(message){
-                app.messages.push(message);
-                app.$nextTick(function () {
-                    var messageBox = document.getElementById('chatbox');
-                    messageBox.scrollTop = message.scrollHeight;
-                })
-            })
-        }
-    });
-</script>
 </html>

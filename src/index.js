@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 
 const bodyParser = require("body-parser");
 const database = require("./app/config/dbconfig");
-
+let laListe = [];
 process.on("exit", function(code) {
   return console.log(`About to exit with code ${code}`);
 });
@@ -29,6 +29,7 @@ database.init.then(db => {
 
 io.on("connection", socket => {
   socket.username = "anonymous";
+  socket.emit("listBeer", laListe);
   socket.on("message", msg =>
     io.emit("message", { user: socket.username, message: msg })
   );
@@ -40,5 +41,14 @@ io.on("connection", socket => {
       user: "Server",
       message: socket.username + " viens de se connecter sur le serveur !"
     });
+  });
+
+  socket.on("newBeer", beer => {
+    socket.broadcast.emit("broadcast-new", beer);
+    laListe.push(beer);
+  });
+  socket.on("suprBiere", row => {
+    socket.broadcast.emit("broadcast-supr", row);
+    laListe.splice(row, 1);
   });
 });
